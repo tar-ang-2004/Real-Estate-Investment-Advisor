@@ -504,22 +504,4 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 **Tarang Kishor**
 
 - GitHub: [@tarangkishor](https://github.com/tarangkishor)
-- LinkedIn: [Tarang Kishor](https://linkedin.com/in/tarangkishor)
-
----
-
-## 🙏 Acknowledgments
-
-- Dataset inspired by Indian real estate market data
-- UI design inspired by modern glassmorphism trends
-- Thanks to the open-source community for amazing tools
-
----
-
-<div align="center">
-
-**⭐ Star this repository if you found it helpful!**
-
-Made with ❤️ for real estate investors
-
-</div>
+- LinkedIn: [Tarang Kishor](https://linkedin.com/in/tarang-kishor)
