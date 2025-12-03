@@ -1,0 +1,337 @@
+{% extends 'base.html' %}
+
+{% block title %}Predict - PropInvest AI{% endblock %}
+
+{% block content %}
+<section class="min-h-screen py-12 mesh-gradient">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-12" data-aos="fade-down">
+            <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
+                <i class="fas fa-magic text-amber-400 mr-2"></i>
+                <span class="text-sm text-gray-300">AI-Powered Prediction</span>
+            </div>
+            <h1 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+                Property Investment <span class="gradient-text">Analysis</span>
+            </h1>
+            <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                Enter your property details below for instant AI predictions on investment potential and future value
+            </p>
+        </div>
+        
+        <!-- Main Form Card -->
+        <div class="glass rounded-3xl overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+            <form action="/predict" method="POST" id="predictionForm" class="p-8 md:p-12">
+                <!-- Location Section -->
+                <div class="mb-12">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 rounded-xl bg-teal-500/20 flex items-center justify-center mr-4">
+                            <i class="fas fa-map-marker-alt text-teal-400"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white">Location Details</h2>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="group">
+                            <label class="block text-sm font-medium text-gray-300 mb-2">State</label>
+                            <div class="relative">
+                                <select name="state" id="state" required class="form-input w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-amber-500 focus:ring-0 transition-all appearance-none cursor-pointer">
+                                    <option value="" class="bg-slate-800">Select State</option>
+                                    {% for state in states %}
+                                    <option value="{{ state }}" class="bg-slate-800">{{ state }}</option>
+                                    {% endfor %}
+                                </select>
+                                <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="group">
+                            <label class="block text-sm font-medium text-gray-300 mb-2">City</label>
+                            <div class="relative">
+                                <select name="city" id="city" required class="form-input w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-amber-500 focus:ring-0 transition-all appearance-none cursor-pointer">
+                                    <option value="" class="bg-slate-800">Select City</option>
+                                    {% for city in cities %}
+                                    <option value="{{ city }}" class="bg-slate-800">{{ city }}</option>
+                                    {% endfor %}
+                                </select>
+                                <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="group">
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Property Type</label>
+                            <div class="relative">
+                                <select name="property_type" required class="form-input w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-amber-500 focus:ring-0 transition-all appearance-none cursor-pointer">
+                                    {% for type in property_types %}
+                                    <option value="{{ type }}" class="bg-slate-800">{{ type }}</option>
+                                    {% endfor %}
+                                </select>
+                                <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Property Details Section -->
+                <div class="mb-12">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center mr-4">
+                            <i class="fas fa-home text-amber-400"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white">Property Details</h2>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-4 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">BHK</label>
+                            <div class="relative">
+                                <select name="bhk" required class="form-input w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-amber-500 focus:ring-0 transition-all appearance-none">
+                                    <option value="1" class="bg-slate-800">1 BHK</option>
+                                    <option value="2" selected class="bg-slate-800">2 BHK</option>
+                                    <option value="3" class="bg-slate-800">3 BHK</option>
+                                    <option value="4" class="bg-slate-800">4 BHK</option>
+                                    <option value="5" class="bg-slate-800">5 BHK</option>
+                                </select>
+                                <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Size (Sq Ft)</label>
+                            <input type="number" name="size_sqft" value="1500" min="100" max="10000" required 
+                                   class="form-input w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-amber-500 focus:ring-0 transition-all">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Price (Lakhs) <span class="text-amber-400">₹</span></label>
+                            <input type="number" name="price" value="50" min="1" max="1000" step="0.01" required 
+                                   class="form-input w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-amber-500 focus:ring-0 transition-all">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Year Built</label>
+                            <input type="number" name="year_built" value="2020" min="1950" max="2025" required 
+                                   class="form-input w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-amber-500 focus:ring-0 transition-all">
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-4 gap-6 mt-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Floor No</label>
+                            <input type="number" name="floor_no" value="5" min="0" max="50" required 
+                                   class="form-input w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-amber-500 focus:ring-0 transition-all">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Total Floors</label>
+                            <input type="number" name="total_floors" value="10" min="1" max="100" required 
+                                   class="form-input w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-amber-500 focus:ring-0 transition-all">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Furnished Status</label>
+                            <div class="relative">
+                                <select name="furnished_status" required class="form-input w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-amber-500 focus:ring-0 transition-all appearance-none">
+                                    {% for status in furnished_status %}
+                                    <option value="{{ status }}" {% if status == 'Semi-furnished' %}selected{% endif %} class="bg-slate-800">{{ status }}</option>
+                                    {% endfor %}
+                                </select>
+                                <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Owner Type</label>
+                            <div class="relative">
+                                <select name="owner_type" required class="form-input w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-amber-500 focus:ring-0 transition-all appearance-none">
+                                    {% for type in owner_types %}
+                                    <option value="{{ type }}" class="bg-slate-800">{{ type }}</option>
+                                    {% endfor %}
+                                </select>
+                                <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Amenities Section -->
+                <div class="mb-12">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center mr-4">
+                            <i class="fas fa-star text-orange-400"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white">Amenities & Infrastructure</h2>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-4 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Nearby Schools</label>
+                            <input type="number" name="nearby_schools" value="5" min="0" max="20" required 
+                                   class="form-input w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-amber-500 focus:ring-0 transition-all">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Nearby Hospitals</label>
+                            <input type="number" name="nearby_hospitals" value="3" min="0" max="20" required 
+                                   class="form-input w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-amber-500 focus:ring-0 transition-all">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Transport Access</label>
+                            <div class="relative">
+                                <select name="transport" required class="form-input w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-amber-500 focus:ring-0 transition-all appearance-none">
+                                    {% for opt in transport_options %}
+                                    <option value="{{ opt }}" {% if opt == 'Medium' %}selected{% endif %} class="bg-slate-800">{{ opt }}</option>
+                                    {% endfor %}
+                                </select>
+                                <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Availability</label>
+                            <div class="relative">
+                                <select name="availability" required class="form-input w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-amber-500 focus:ring-0 transition-all appearance-none">
+                                    {% for status in availability_status %}
+                                    <option value="{{ status }}" class="bg-slate-800">{{ status }}</option>
+                                    {% endfor %}
+                                </select>
+                                <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Toggle Options -->
+                    <div class="grid md:grid-cols-2 gap-6 mt-6">
+                        <div class="p-6 rounded-xl bg-white/5 border border-white/10">
+                            <label class="block text-sm font-medium text-gray-300 mb-4">Parking Space</label>
+                            <div class="flex gap-4">
+                                <label class="flex-1 cursor-pointer">
+                                    <input type="radio" name="parking" value="Yes" checked class="peer hidden">
+                                    <div class="p-4 rounded-xl border border-white/10 peer-checked:border-green-500 peer-checked:bg-green-500/20 text-center transition-all">
+                                        <i class="fas fa-check text-green-400 mb-2"></i>
+                                        <div class="text-white font-medium">Yes</div>
+                                    </div>
+                                </label>
+                                <label class="flex-1 cursor-pointer">
+                                    <input type="radio" name="parking" value="No" class="peer hidden">
+                                    <div class="p-4 rounded-xl border border-white/10 peer-checked:border-red-500 peer-checked:bg-red-500/20 text-center transition-all">
+                                        <i class="fas fa-times text-red-400 mb-2"></i>
+                                        <div class="text-white font-medium">No</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6 rounded-xl bg-white/5 border border-white/10">
+                            <label class="block text-sm font-medium text-gray-300 mb-4">24/7 Security</label>
+                            <div class="flex gap-4">
+                                <label class="flex-1 cursor-pointer">
+                                    <input type="radio" name="security" value="Yes" checked class="peer hidden">
+                                    <div class="p-4 rounded-xl border border-white/10 peer-checked:border-green-500 peer-checked:bg-green-500/20 text-center transition-all">
+                                        <i class="fas fa-shield-alt text-green-400 mb-2"></i>
+                                        <div class="text-white font-medium">Yes</div>
+                                    </div>
+                                </label>
+                                <label class="flex-1 cursor-pointer">
+                                    <input type="radio" name="security" value="No" class="peer hidden">
+                                    <div class="p-4 rounded-xl border border-white/10 peer-checked:border-red-500 peer-checked:bg-red-500/20 text-center transition-all">
+                                        <i class="fas fa-times text-red-400 mb-2"></i>
+                                        <div class="text-white font-medium">No</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" id="submitBtn" class="group inline-flex items-center px-12 py-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold text-lg hover:shadow-2xl hover:shadow-amber-500/30 transition-all duration-300 ripple">
+                        <span id="btnText">
+                            <i class="fas fa-magic mr-3"></i>
+                            Get AI Prediction
+                        </span>
+                        <span id="btnLoader" class="hidden">
+                            <svg class="animate-spin h-6 w-6 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Analyzing...
+                        </span>
+                        <i class="fas fa-arrow-right ml-3 transform group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Info Cards -->
+        <div class="grid md:grid-cols-3 gap-6 mt-12">
+            <div class="glass rounded-2xl p-6 text-center" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-12 h-12 mx-auto rounded-xl bg-green-500/20 flex items-center justify-center mb-4">
+                    <i class="fas fa-check-circle text-green-400 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Instant Results</h3>
+                <p class="text-gray-400 text-sm">Get predictions in seconds with our optimized ML models</p>
+            </div>
+            
+            <div class="glass rounded-2xl p-6 text-center" data-aos="fade-up" data-aos-delay="400">
+                <div class="w-12 h-12 mx-auto rounded-xl bg-teal-500/20 flex items-center justify-center mb-4">
+                    <i class="fas fa-lock text-teal-400 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Secure & Private</h3>
+                <p class="text-gray-400 text-sm">Your data is processed securely and never stored</p>
+            </div>
+            
+            <div class="glass rounded-2xl p-6 text-center" data-aos="fade-up" data-aos-delay="500">
+                <div class="w-12 h-12 mx-auto rounded-xl bg-amber-500/20 flex items-center justify-center mb-4">
+                    <i class="fas fa-chart-line text-amber-400 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Data-Driven</h3>
+                <p class="text-gray-400 text-sm">Predictions based on 250K+ property records</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Dynamic city loading
+    document.getElementById('state').addEventListener('change', function() {
+        const state = this.value;
+        const citySelect = document.getElementById('city');
+        
+        if (state) {
+            citySelect.innerHTML = '<option value="" class="bg-gray-900">Loading...</option>';;
+            
+            fetch(`/api/cities/${state}`)
+                .then(response => response.json())
+                .then(cities => {
+                    citySelect.innerHTML = '<option value="" class="bg-gray-900">Select City</option>';
+                    cities.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city;
+                        option.textContent = city;
+                        option.className = 'bg-gray-900';
+                        citySelect.appendChild(option);
+                    });
+                })
+                .catch(() => {
+                    citySelect.innerHTML = '<option value="" class="bg-slate-800">Select City</option>';
+                });
+        }
+    });
+    
+    // Form submission with loading state
+    document.getElementById('predictionForm').addEventListener('submit', function() {
+        const btn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const btnLoader = document.getElementById('btnLoader');
+        
+        btnText.classList.add('hidden');
+        btnLoader.classList.remove('hidden');
+        btn.disabled = true;
+    });
+</script>
+{% endblock %}

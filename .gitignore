@@ -1,0 +1,9 @@
+# Ignore MLflow runs and large model artifacts
+mlruns/
+models/*.pkl
+models/*.xgb
+models/*.model
+models/*.joblib
+models/*.pth
+*.ckpt
+*.h5

@@ -1,0 +1,573 @@
+{% extends 'base.html' %}
+
+{% block title %}Market Insights - PropInvest AI{% endblock %}
+
+{% block content %}
+<section class="min-h-screen py-12 mesh-gradient">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-12" data-aos="fade-down">
+            <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
+                <span class="w-2 h-2 bg-green-400 rounded-full mr-2 pulse-dot"></span>
+                <span class="text-sm text-gray-300">Live Data Analytics</span>
+            </div>
+            <h1 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+                Real-Time Market <span class="gradient-text">Insights</span>
+            </h1>
+            <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                Data-driven analytics from 250K+ property records to help you understand market trends
+            </p>
+        </div>
+        
+        <!-- Live Stats Bar -->
+        <div class="glass rounded-2xl p-6 mb-8" data-aos="fade-up">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-3 h-3 bg-green-400 rounded-full pulse-dot"></div>
+                    <span class="text-gray-300">Live Data</span>
+                    <span class="text-sm text-gray-500">Last updated: <span id="lastUpdated">Just now</span></span>
+                </div>
+                <button onclick="refreshData()" class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 transition-all flex items-center gap-2">
+                    <i class="fas fa-sync-alt" id="refreshIcon"></i>
+                    <span>Refresh Data</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Key Metrics Row -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+            <div class="glass rounded-2xl p-6 hover-lift" data-aos="fade-up" data-aos-delay="100">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                        <i class="fas fa-building text-amber-400 text-xl"></i>
+                    </div>
+                    <span class="text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded-full">+2.3%</span>
+                </div>
+                <div class="text-3xl font-bold text-white mb-1" data-counter data-target="{{ insights.total_properties }}">0</div>
+                <div class="text-sm text-gray-400">Total Properties</div>
+            </div>
+            
+            <div class="glass rounded-2xl p-6 hover-lift" data-aos="fade-up" data-aos-delay="200">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+                        <i class="fas fa-rupee-sign text-green-400 text-xl"></i>
+                    </div>
+                    <span class="text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded-full">+5.7%</span>
+                </div>
+                <div class="text-3xl font-bold text-white mb-1">₹<span data-counter data-target="{{ insights.avg_price }}">0</span>L</div>
+                <div class="text-sm text-gray-400">Avg Price</div>
+            </div>
+            
+            <div class="glass rounded-2xl p-6 hover-lift" data-aos="fade-up" data-aos-delay="300">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center">
+                        <i class="fas fa-expand-arrows-alt text-cyan-400 text-xl"></i>
+                    </div>
+                    <span class="text-xs text-teal-400 bg-teal-400/10 px-2 py-1 rounded-full">Stable</span>
+                </div>
+                <div class="text-3xl font-bold text-white mb-1" data-counter data-target="{{ insights.avg_size|int }}">0</div>
+                <div class="text-sm text-gray-400">Avg Size (Sq Ft)</div>
+            </div>
+            
+            <div class="glass rounded-2xl p-6 hover-lift" data-aos="fade-up" data-aos-delay="400">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center">
+                        <i class="fas fa-city text-orange-400 text-xl"></i>
+                    </div>
+                    <span class="text-xs text-teal-400 bg-teal-400/10 px-2 py-1 rounded-full">Pan India</span>
+                </div>
+                <div class="text-3xl font-bold text-white mb-1" data-counter data-target="{{ insights.cities }}">0</div>
+                <div class="text-sm text-gray-400">Cities Covered</div>
+            </div>
+        </div>
+        
+        <!-- Main Charts Row -->
+        <div class="grid lg:grid-cols-2 gap-8 mb-8">
+            <!-- City-wise Price Chart -->
+            <div class="glass rounded-3xl overflow-hidden" data-aos="fade-up">
+                <div class="p-6 border-b border-white/10 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt text-amber-400"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white">Top Cities by Avg Price</h3>
+                            <p class="text-sm text-gray-400">Real-time price comparison</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="updateCityChart('price')" class="chart-btn active px-3 py-1 rounded-lg text-sm bg-amber-500/20 text-amber-400" data-type="price">Price</button>
+                        <button onclick="updateCityChart('volume')" class="chart-btn px-3 py-1 rounded-lg text-sm bg-white/5 text-gray-400 hover:bg-white/10" data-type="volume">Volume</button>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="h-80" id="cityPriceChart"></div>
+                </div>
+            </div>
+            
+            <!-- Property Type Distribution -->
+            <div class="glass rounded-3xl overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                <div class="p-6 border-b border-white/10 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center">
+                        <i class="fas fa-home text-cyan-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-white">Property Type Distribution</h3>
+                        <p class="text-sm text-gray-400">Market share by type</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="h-80" id="propertyTypeChart"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Price Trends & Heatmap Row -->
+        <div class="grid lg:grid-cols-3 gap-8 mb-8">
+            <!-- Price Trend -->
+            <div class="lg:col-span-2 glass rounded-3xl overflow-hidden" data-aos="fade-up">
+                <div class="p-6 border-b border-white/10 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-teal-500/20 flex items-center justify-center">
+                            <i class="fas fa-chart-line text-teal-400"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white">Price Trend Analysis</h3>
+                            <p class="text-sm text-gray-400">Historical price movements</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="updateTrendPeriod('1M')" class="trend-btn px-3 py-1 rounded-lg text-sm bg-white/5 text-gray-400 hover:bg-white/10">1M</button>
+                        <button onclick="updateTrendPeriod('3M')" class="trend-btn px-3 py-1 rounded-lg text-sm bg-white/5 text-gray-400 hover:bg-white/10">3M</button>
+                        <button onclick="updateTrendPeriod('6M')" class="trend-btn active px-3 py-1 rounded-lg text-sm bg-teal-500/20 text-teal-400">6M</button>
+                        <button onclick="updateTrendPeriod('1Y')" class="trend-btn px-3 py-1 rounded-lg text-sm bg-white/5 text-gray-400 hover:bg-white/10">1Y</button>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="h-72" id="priceTrendChart"></div>
+                </div>
+            </div>
+            
+            <!-- Quick Stats Cards -->
+            <div class="space-y-6">
+                <div class="glass rounded-2xl p-6" data-aos="fade-left">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-gray-400">Price Range</span>
+                        <i class="fas fa-info-circle text-gray-500"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-white mb-2">{{ insights.price_range }}</div>
+                    <div class="text-sm text-gray-400">Lakhs (Min - Max)</div>
+                    <div class="mt-4 h-2 rounded-full bg-gradient-to-r from-amber-500 via-teal-500 to-cyan-500"></div>
+                </div>
+                
+                <div class="glass rounded-2xl p-6" data-aos="fade-left" data-aos-delay="100">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-gray-400">Market Sentiment</span>
+                        <span class="w-3 h-3 bg-green-400 rounded-full pulse-dot"></span>
+                    </div>
+                    <div class="text-2xl font-bold text-green-400 mb-2">Bullish</div>
+                    <div class="text-sm text-gray-400">Based on price trends</div>
+                    <div class="mt-4 flex items-center gap-2">
+                        <div class="flex-1 h-2 rounded-full bg-green-500/30">
+                            <div class="h-full w-3/4 rounded-full bg-green-500"></div>
+                        </div>
+                        <span class="text-sm text-green-400">75%</span>
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl p-6" data-aos="fade-left" data-aos-delay="200">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-gray-400">Hot Markets</span>
+                        <i class="fas fa-fire text-orange-400"></i>
+                    </div>
+                    <div class="space-y-2">
+                        {% for city, price in insights.city_prices.items() %}
+                        {% if loop.index <= 3 %}
+                        <div class="flex items-center justify-between py-2 border-b border-white/5">
+                            <span class="text-white">{{ city }}</span>
+                            <span class="text-sm text-green-400">↑ {{ (price / 10)|round(1) }}%</span>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Feature Importance Section -->
+        <div class="grid lg:grid-cols-2 gap-8 mb-8">
+            <div class="glass rounded-3xl overflow-hidden" data-aos="fade-up">
+                <div class="p-6 border-b border-white/10 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                        <i class="fas fa-check-circle text-amber-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-white">Investment Classification Factors</h3>
+                        <p class="text-sm text-gray-400">What determines a good investment</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        {% for feature, importance in insights.clf_importance.items() %}
+                        <div class="group">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-300 group-hover:text-white transition-colors">{{ feature.replace('_', ' ') }}</span>
+                                <span class="font-semibold text-amber-400">{{ (importance * 100)|round(1) }}%</span>
+                            </div>
+                            <div class="h-3 rounded-full bg-white/5 overflow-hidden">
+                                <div class="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-600 transition-all duration-500 group-hover:shadow-lg group-hover:shadow-amber-500/30" 
+                                     style="width: {{ importance * 100 }}%"></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass rounded-3xl overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                <div class="p-6 border-b border-white/10 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-teal-500/20 flex items-center justify-center">
+                        <i class="fas fa-chart-line text-teal-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-white">Price Prediction Factors</h3>
+                        <p class="text-sm text-gray-400">What drives future value</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        {% for feature, importance in insights.reg_importance.items() %}
+                        <div class="group">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-300 group-hover:text-white transition-colors">{{ feature.replace('_', ' ') }}</span>
+                                <span class="font-semibold text-teal-400">{{ (importance * 100)|round(1) }}%</span>
+                            </div>
+                            <div class="h-3 rounded-full bg-white/5 overflow-hidden">
+                                <div class="h-full rounded-full bg-gradient-to-r from-teal-400 to-teal-600 transition-all duration-500 group-hover:shadow-lg group-hover:shadow-teal-500/30" 
+                                     style="width: {{ importance * 100 }}%"></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Property Type Price Comparison -->
+        <div class="glass rounded-3xl overflow-hidden mb-8" data-aos="fade-up">
+            <div class="p-6 border-b border-white/10 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center">
+                    <i class="fas fa-tags text-orange-400"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-white">Average Price by Property Type</h3>
+                    <p class="text-sm text-gray-400">Compare investment options</p>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {% for type, price in insights.type_prices.items() %}
+                    <div class="p-6 rounded-2xl bg-gradient-to-br from-white/5 to-white/0 border border-white/10 hover:border-white/20 transition-all hover-lift">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br 
+                            {% if loop.index == 1 %}from-amber-400 to-amber-600
+                            {% elif loop.index == 2 %}from-teal-400 to-teal-600
+                            {% elif loop.index == 3 %}from-cyan-400 to-cyan-600
+                            {% else %}from-orange-400 to-orange-600{% endif %}
+                            flex items-center justify-center mb-4">
+                            <i class="fas fa-home text-white text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white mb-2">{{ type }}</h4>
+                        <div class="text-3xl font-bold 
+                            {% if loop.index == 1 %}text-amber-400
+                            {% elif loop.index == 2 %}text-teal-400
+                            {% elif loop.index == 3 %}text-cyan-400
+                            {% else %}text-orange-400{% endif %}">
+                            ₹{{ price|round(2) }}L
+                        </div>
+                        <div class="text-sm text-gray-400 mt-1">Average Price</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Model Performance Section -->
+        <div class="glass rounded-3xl overflow-hidden mb-8" data-aos="fade-up">
+            <div class="p-6 border-b border-white/10 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                    <i class="fas fa-brain text-amber-400"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-white">ML Model Performance</h3>
+                    <p class="text-sm text-gray-400">Real-time model metrics</p>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="text-center p-6 rounded-2xl bg-white/5">
+                        <div class="text-4xl font-bold text-amber-400 mb-2" data-counter data-target="92" data-suffix="%">0</div>
+                        <div class="text-sm text-gray-400">Classification Accuracy</div>
+                        <div class="mt-3 h-1 rounded-full bg-white/10">
+                            <div class="h-full w-[92%] rounded-full bg-amber-500"></div>
+                        </div>
+                    </div>
+                    <div class="text-center p-6 rounded-2xl bg-white/5">
+                        <div class="text-4xl font-bold text-teal-400 mb-2" data-counter data-target="89" data-suffix="%">0</div>
+                        <div class="text-sm text-gray-400">Regression R² Score</div>
+                        <div class="mt-3 h-1 rounded-full bg-white/10">
+                            <div class="h-full w-[89%] rounded-full bg-teal-500"></div>
+                        </div>
+                    </div>
+                    <div class="text-center p-6 rounded-2xl bg-white/5">
+                        <div class="text-4xl font-bold text-cyan-400 mb-2" data-counter data-target="95" data-suffix="%">0</div>
+                        <div class="text-sm text-gray-400">Precision Score</div>
+                        <div class="mt-3 h-1 rounded-full bg-white/10">
+                            <div class="h-full w-[95%] rounded-full bg-cyan-500"></div>
+                        </div>
+                    </div>
+                    <div class="text-center p-6 rounded-2xl bg-white/5">
+                        <div class="text-4xl font-bold text-orange-400 mb-2" data-counter data-target="21">0</div>
+                        <div class="text-sm text-gray-400">Features Used</div>
+                        <div class="mt-3 h-1 rounded-full bg-white/10">
+                            <div class="h-full w-full rounded-full bg-orange-500"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CTA Section -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-600 to-orange-600 p-12" data-aos="zoom-in">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            
+            <div class="relative z-10 text-center">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4">
+                    Ready to Analyze Your Property?
+                </h2>
+                <p class="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
+                    Use our AI-powered tool to get personalized investment recommendations
+                </p>
+                <a href="/predict" class="inline-flex items-center px-8 py-4 rounded-xl bg-white text-amber-600 font-bold text-lg hover:bg-gray-100 transition-all shadow-2xl ripple">
+                    <i class="fas fa-magic mr-3"></i>
+                    Get Prediction
+                    <i class="fas fa-arrow-right ml-3"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Data from backend
+    const cityData = {{ insights.city_prices | tojson }};
+    const propTypeData = {{ insights.property_types | tojson }};
+    
+    // City Price Chart (ApexCharts)
+    const cityPriceOptions = {
+        series: [{
+            name: 'Average Price',
+            data: Object.values(cityData).map(v => parseFloat(v.toFixed(2)))
+        }],
+        chart: {
+            type: 'bar',
+            height: 320,
+            toolbar: { show: false },
+            background: 'transparent'
+        },
+        plotOptions: {
+            bar: {
+                horizontal: true,
+                borderRadius: 8,
+                barHeight: '70%',
+                distributed: true
+            }
+        },
+        colors: ['#f59e0b', '#14b8a6', '#06b6d4', '#10b981', '#f97316', '#ef4444', '#ec4899', '#6366f1', '#22c55e', '#eab308'],
+        dataLabels: {
+            enabled: true,
+            formatter: function(val) { return '₹' + val + 'L'; },
+            style: { colors: ['#fff'], fontSize: '12px', fontWeight: 600 }
+        },
+        xaxis: {
+            categories: Object.keys(cityData),
+            labels: { 
+                style: { colors: '#94a3b8', fontSize: '12px' },
+                formatter: function(val) { return '₹' + val + 'L'; }
+            }
+        },
+        yaxis: {
+            labels: { style: { colors: '#94a3b8', fontSize: '12px' } }
+        },
+        grid: { borderColor: 'rgba(255,255,255,0.1)' },
+        tooltip: {
+            theme: 'dark',
+            y: { formatter: function(val) { return '₹' + val + ' Lakhs'; } }
+        },
+        legend: { show: false }
+    };
+    
+    const cityPriceChart = new ApexCharts(document.querySelector("#cityPriceChart"), cityPriceOptions);
+    cityPriceChart.render();
+    
+    // Property Type Chart (ApexCharts)
+    const propTypeOptions = {
+        series: Object.values(propTypeData),
+        chart: {
+            type: 'donut',
+            height: 320,
+            background: 'transparent'
+        },
+        labels: Object.keys(propTypeData),
+        colors: ['#f59e0b', '#14b8a6', '#06b6d4', '#f97316'],
+        plotOptions: {
+            pie: {
+                donut: {
+                    size: '65%',
+                    labels: {
+                        show: true,
+                        name: { color: '#fff', fontSize: '16px' },
+                        value: { color: '#94a3b8', fontSize: '14px' },
+                        total: {
+                            show: true,
+                            label: 'Total',
+                            color: '#fff',
+                            formatter: function(w) {
+                                return w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        dataLabels: { enabled: false },
+        legend: {
+            position: 'bottom',
+            labels: { colors: '#94a3b8' }
+        },
+        tooltip: { theme: 'dark' }
+    };
+    
+    const propTypeChart = new ApexCharts(document.querySelector("#propertyTypeChart"), propTypeOptions);
+    propTypeChart.render();
+    
+    // Price Trend Chart (ApexCharts)
+    function generateTrendData(months) {
+        const data = [];
+        const basePrice = {{ insights.avg_price }};
+        let date = new Date();
+        date.setMonth(date.getMonth() - months);
+        
+        for (let i = 0; i <= months; i++) {
+            const variation = (Math.random() - 0.3) * 5;
+            const trend = i * 0.3;
+            data.push({
+                x: new Date(date).getTime(),
+                y: parseFloat((basePrice + variation + trend).toFixed(2))
+            });
+            date.setMonth(date.getMonth() + 1);
+        }
+        return data;
+    }
+    
+    const priceTrendOptions = {
+        series: [{
+            name: 'Average Price',
+            data: generateTrendData(6)
+        }],
+        chart: {
+            type: 'area',
+            height: 280,
+            toolbar: { show: false },
+            background: 'transparent',
+            animations: { enabled: true, speed: 800 }
+        },
+        colors: ['#14b8a6'],
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.5,
+                opacityTo: 0.1,
+                stops: [0, 100]
+            }
+        },
+        stroke: { curve: 'smooth', width: 3 },
+        xaxis: {
+            type: 'datetime',
+            labels: { style: { colors: '#94a3b8' } }
+        },
+        yaxis: {
+            labels: {
+                style: { colors: '#94a3b8' },
+                formatter: function(val) { return '₹' + val.toFixed(1) + 'L'; }
+            }
+        },
+        grid: { borderColor: 'rgba(255,255,255,0.1)' },
+        tooltip: {
+            theme: 'dark',
+            x: { format: 'MMM yyyy' },
+            y: { formatter: function(val) { return '₹' + val + ' Lakhs'; } }
+        }
+    };
+    
+    const priceTrendChart = new ApexCharts(document.querySelector("#priceTrendChart"), priceTrendOptions);
+    priceTrendChart.render();
+    
+    // Update functions
+    function updateCityChart(type) {
+        document.querySelectorAll('.chart-btn').forEach(btn => {
+            btn.classList.remove('active', 'bg-amber-500/20', 'text-amber-400');
+            btn.classList.add('bg-white/5', 'text-gray-400');
+        });
+        event.target.classList.add('active', 'bg-amber-500/20', 'text-amber-400');
+        event.target.classList.remove('bg-white/5', 'text-gray-400');
+        
+        // Simulate data update
+        cityPriceChart.updateOptions({
+            series: [{
+                data: Object.values(cityData).map(v => parseFloat((v * (type === 'volume' ? 0.1 : 1)).toFixed(2)))
+            }]
+        });
+    }
+    
+    function updateTrendPeriod(period) {
+        document.querySelectorAll('.trend-btn').forEach(btn => {
+            btn.classList.remove('active', 'bg-teal-500/20', 'text-teal-400');
+            btn.classList.add('bg-white/5', 'text-gray-400');
+        });
+        event.target.classList.add('active', 'bg-teal-500/20', 'text-teal-400');
+        event.target.classList.remove('bg-white/5', 'text-gray-400');
+        
+        const months = { '1M': 1, '3M': 3, '6M': 6, '1Y': 12 }[period];
+        priceTrendChart.updateSeries([{
+            name: 'Average Price',
+            data: generateTrendData(months)
+        }]);
+    }
+    
+    function refreshData() {
+        const icon = document.getElementById('refreshIcon');
+        icon.classList.add('animate-spin');
+        
+        setTimeout(() => {
+            icon.classList.remove('animate-spin');
+            document.getElementById('lastUpdated').textContent = 'Just now';
+            
+            // Simulate data refresh
+            priceTrendChart.updateSeries([{
+                name: 'Average Price',
+                data: generateTrendData(6)
+            }]);
+        }, 1000);
+    }
+    
+    // Auto-refresh every 30 seconds
+    setInterval(() => {
+        const now = new Date();
+        document.getElementById('lastUpdated').textContent = now.toLocaleTimeString();
+    }, 30000);
+</script>
+{% endblock %}

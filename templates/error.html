@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Error - PropInvest AI{% endblock %}
+
+{% block content %}
+<section class="min-h-screen flex items-center justify-center mesh-gradient">
+    <div class="max-w-xl mx-auto px-4 text-center" data-aos="fade-up">
+        <!-- Error Icon -->
+        <div class="relative mb-8">
+            <div class="w-32 h-32 mx-auto rounded-3xl bg-red-500/20 flex items-center justify-center animate-float">
+                <i class="fas fa-exclamation-triangle text-red-400 text-5xl"></i>
+            </div>
+            <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-4 bg-red-500/20 blur-xl rounded-full"></div>
+        </div>
+        
+        <!-- Error Message -->
+        <h1 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+            Oops! Something went wrong
+        </h1>
+        <p class="text-xl text-gray-400 mb-8">
+            {{ message if message else "An unexpected error occurred. Please try again." }}
+        </p>
+        
+        <!-- Error Details Card -->
+        <div class="glass rounded-2xl p-6 mb-8 text-left">
+            <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                <i class="fas fa-info-circle text-amber-400 mr-3"></i>
+                Troubleshooting Steps
+            </h3>
+            <ul class="space-y-3 text-gray-400">
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-teal-400 mt-1 mr-3"></i>
+                    <span>Make sure you've run the Jupyter notebook to train and save the models</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-teal-400 mt-1 mr-3"></i>
+                    <span>Check that all model files exist in the <code class="text-amber-400 bg-white/10 px-2 py-1 rounded">models/</code> directory</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-teal-400 mt-1 mr-3"></i>
+                    <span>Ensure all required packages are installed from <code class="text-amber-400 bg-white/10 px-2 py-1 rounded">requirements.txt</code></span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-teal-400 mt-1 mr-3"></i>
+                    <span>Restart the Flask server after running the notebook</span>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/" class="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold hover:shadow-lg hover:shadow-amber-500/30 transition-all">
+                <i class="fas fa-home mr-3"></i>
+                Go Home
+            </a>
+            <button onclick="location.reload()" class="inline-flex items-center justify-center px-8 py-4 rounded-xl border border-white/20 text-white font-semibold hover:bg-white/5 transition-all">
+                <i class="fas fa-redo mr-3"></i>
+                Try Again
+            </button>
+        </div>
+        
+        <!-- Help Section -->
+        <div class="mt-12 p-6 rounded-2xl bg-white/5 border border-white/10">
+            <h4 class="text-white font-semibold mb-2">Need Help?</h4>
+            <p class="text-gray-400 text-sm">
+                Check the console for detailed error logs or review the 
+                <a href="#" class="text-amber-400 hover:underline">documentation</a> 
+                for setup instructions.
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

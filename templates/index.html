@@ -1,0 +1,320 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - PropInvest AI{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="mesh-gradient min-h-screen flex items-center relative overflow-hidden">
+    <!-- Animated background elements -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-amber-500/20 rounded-full blur-3xl animate-float"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-teal-500/20 rounded-full blur-3xl animate-float" style="animation-delay: 1s;"></div>
+        <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl animate-float" style="animation-delay: 2s;"></div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <!-- Hero Content -->
+            <div data-aos="fade-right">
+                <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
+                    <span class="w-2 h-2 bg-green-400 rounded-full mr-2 pulse-dot"></span>
+                    <span class="text-sm text-gray-300">AI-Powered Investment Analysis</span>
+                </div>
+                
+                <h1 class="font-display text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+                    <span class="text-white">Invest Smarter in</span><br>
+                    <span class="gradient-text">Real Estate</span>
+                </h1>
+                
+                <p class="text-xl text-gray-400 mb-8 leading-relaxed max-w-lg">
+                    Make data-driven property investment decisions with our advanced ML models. 
+                    Predict future values and identify profitable opportunities instantly.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="/predict" class="group inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold text-lg hover:shadow-2xl hover:shadow-amber-500/30 transition-all duration-300 ripple">
+                        <i class="fas fa-magic mr-3"></i>
+                        Start Prediction
+                        <i class="fas fa-arrow-right ml-3 transform group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    <a href="/insights" class="inline-flex items-center justify-center px-8 py-4 rounded-xl border border-white/20 text-white font-semibold text-lg hover:bg-white/5 transition-all duration-300">
+                        <i class="fas fa-chart-bar mr-3"></i>
+                        View Insights
+                    </a>
+                </div>
+                
+                <!-- Trust badges -->
+                <div class="flex items-center gap-8 mt-12 pt-8 border-t border-white/10">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white" data-counter data-target="250000">0</div>
+                        <div class="text-sm text-gray-400">Properties Analyzed</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white" data-counter data-target="90" data-suffix="%">0</div>
+                        <div class="text-sm text-gray-400">Accuracy Rate</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white" data-counter data-target="50">0</div>
+                        <div class="text-sm text-gray-400">Cities Covered</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Visual -->
+            <div class="relative" data-aos="fade-left" data-aos-delay="200">
+                <div class="relative">
+                    <!-- Main card -->
+                    <div class="glass rounded-3xl p-8 hover-lift">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center">
+                                    <i class="fas fa-thumbs-up text-white text-xl"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-gray-400">Investment Score</div>
+                                    <div class="text-2xl font-bold text-white">Good Investment</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-3xl font-bold text-green-400">92%</div>
+                                <div class="text-sm text-gray-400">Confidence</div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center p-4 rounded-xl bg-white/5">
+                                <span class="text-gray-400">Current Price</span>
+                                <span class="text-xl font-semibold text-white">₹75 Lakhs</span>
+                            </div>
+                            <div class="flex justify-between items-center p-4 rounded-xl bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30">
+                                <span class="text-gray-300">Predicted (5Y)</span>
+                                <span class="text-xl font-semibold text-green-400">₹112 Lakhs</span>
+                            </div>
+                            <div class="flex justify-between items-center p-4 rounded-xl bg-white/5">
+                                <span class="text-gray-400">Appreciation</span>
+                                <span class="text-xl font-semibold text-green-400">+49.3%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Floating elements -->
+                    <div class="absolute -top-6 -right-6 glass rounded-2xl p-4 animate-float">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-teal-500/20 flex items-center justify-center">
+                                <i class="fas fa-chart-line text-teal-400"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-400">ML Model</div>
+                                <div class="text-sm font-semibold text-white">XGBoost</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute -bottom-6 -left-6 glass rounded-2xl p-4 animate-float" style="animation-delay: 1.5s;">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
+                                <i class="fas fa-database text-amber-400"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-400">Training Data</div>
+                                <div class="text-sm font-semibold text-white">250K+ Properties</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <i class="fas fa-chevron-down text-white/50 text-2xl"></i>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-24 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+                Powerful Features for <span class="gradient-text">Smart Investors</span>
+            </h2>
+            <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                Our AI-powered platform provides comprehensive analysis to help you make informed investment decisions
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="group glass rounded-2xl p-8 hover-lift" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-check-double text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Investment Classification</h3>
+                <p class="text-gray-400 leading-relaxed">
+                    Multi-factor scoring system analyzes location, price, infrastructure, and amenities to determine if a property is a good investment.
+                </p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="group glass rounded-2xl p-8 hover-lift" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-chart-line text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Price Prediction</h3>
+                <p class="text-gray-400 leading-relaxed">
+                    Advanced regression model predicts property value after 5 years based on historical trends and city growth rates.
+                </p>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="group glass rounded-2xl p-8 hover-lift" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-brain text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">XGBoost ML Models</h3>
+                <p class="text-gray-400 leading-relaxed">
+                    State-of-the-art gradient boosting algorithms trained on 250K+ properties for highly accurate predictions.
+                </p>
+            </div>
+            
+            <!-- Feature 4 -->
+            <div class="group glass rounded-2xl p-8 hover-lift" data-aos="fade-up" data-aos-delay="400">
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-map-marked-alt text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Location Intelligence</h3>
+                <p class="text-gray-400 leading-relaxed">
+                    Considers nearby schools, hospitals, transport access, and infrastructure scores for comprehensive analysis.
+                </p>
+            </div>
+            
+            <!-- Feature 5 -->
+            <div class="group glass rounded-2xl p-8 hover-lift" data-aos="fade-up" data-aos-delay="500">
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-rose-400 to-rose-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-flask text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">MLflow Tracking</h3>
+                <p class="text-gray-400 leading-relaxed">
+                    All experiments tracked with MLflow for complete transparency, reproducibility, and model versioning.
+                </p>
+            </div>
+            
+            <!-- Feature 6 -->
+            <div class="group glass rounded-2xl p-8 hover-lift" data-aos="fade-up" data-aos-delay="600">
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-tachometer-alt text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Real-time Analytics</h3>
+                <p class="text-gray-400 leading-relaxed">
+                    Live market insights, city-wise price trends, and feature importance analysis updated in real-time.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-24 bg-gradient-to-b from-gray-950 to-gray-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+                How It <span class="gradient-text">Works</span>
+            </h2>
+            <p class="text-xl text-gray-400">Get predictions in just 4 simple steps</p>
+        </div>
+        
+        <div class="grid md:grid-cols-4 gap-8">
+            {% set steps = [
+                {'icon': 'fa-edit', 'title': 'Enter Details', 'desc': 'Input property location, size, BHK, and other features', 'color': 'blue'},
+                {'icon': 'fa-cogs', 'title': 'AI Analysis', 'desc': 'Our ML models process 21 features instantly', 'color': 'purple'},
+                {'icon': 'fa-chart-pie', 'title': 'Get Results', 'desc': 'View investment score and price predictions', 'color': 'green'},
+                {'icon': 'fa-lightbulb', 'title': 'Make Decision', 'desc': 'Use insights for informed investment choices', 'color': 'orange'}
+            ] %}
+            
+            {% for step in steps %}
+            <div class="relative" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                <!-- Connector line -->
+                {% if not loop.last %}
+                <div class="hidden md:block absolute top-10 left-1/2 w-full h-0.5 bg-gradient-to-r from-{{ step.color }}-500/50 to-transparent"></div>
+                {% endif %}
+                
+                <div class="text-center relative z-10">
+                    <div class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-{{ step.color }}-400 to-{{ step.color }}-600 flex items-center justify-center mb-6 shadow-lg shadow-{{ step.color }}-500/30">
+                        <i class="fas {{ step.icon }} text-white text-3xl"></i>
+                    </div>
+                    <div class="w-8 h-8 mx-auto -mt-10 mb-4 rounded-full bg-gray-900 border-2 border-{{ step.color }}-500 flex items-center justify-center text-{{ step.color }}-400 font-bold">
+                        {{ loop.index }}
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">{{ step.title }}</h3>
+                    <p class="text-gray-400">{{ step.desc }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="glass rounded-3xl p-12" data-aos="fade-up">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-amber-500/20 flex items-center justify-center mb-4">
+                        <i class="fas fa-database text-amber-400 text-2xl"></i>
+                    </div>
+                    <div class="text-4xl font-bold text-white mb-2" data-counter data-target="250000">0</div>
+                    <div class="text-gray-400">Properties Analyzed</div>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-teal-500/20 flex items-center justify-center mb-4">
+                        <i class="fas fa-city text-teal-400 text-2xl"></i>
+                    </div>
+                    <div class="text-4xl font-bold text-white mb-2" data-counter data-target="50">0</div>
+                    <div class="text-gray-400">Cities Covered</div>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-green-500/20 flex items-center justify-center mb-4">
+                        <i class="fas fa-bullseye text-green-400 text-2xl"></i>
+                    </div>
+                    <div class="text-4xl font-bold text-white mb-2" data-counter data-target="90" data-suffix="%">0</div>
+                    <div class="text-gray-400">Prediction Accuracy</div>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-orange-500/20 flex items-center justify-center mb-4">
+                        <i class="fas fa-layer-group text-orange-400 text-2xl"></i>
+                    </div>
+                    <div class="text-4xl font-bold text-white mb-2" data-counter data-target="21">0</div>
+                    <div class="text-gray-400">Features Analyzed</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-600 to-orange-600 p-12 md:p-16" data-aos="zoom-in">
+            <!-- Background decoration -->
+            <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            
+            <div class="relative z-10 text-center">
+                <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-6">
+                    Ready to Find Your Perfect Investment?
+                </h2>
+                <p class="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
+                    Get instant AI-powered predictions on property investments. Start making smarter decisions today.
+                </p>
+                <a href="/predict" class="inline-flex items-center px-8 py-4 rounded-xl bg-white text-amber-600 font-bold text-lg hover:bg-gray-100 transition-all duration-300 shadow-2xl hover:shadow-white/30 ripple">
+                    <i class="fas fa-rocket mr-3"></i>
+                    Start Free Analysis
+                    <i class="fas fa-arrow-right ml-3"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
